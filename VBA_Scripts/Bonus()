@@ -1,0 +1,51 @@
+Sub Bonus()
+
+' Bonus
+
+' Loop through worksheets
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+' Define variables for Bonus exercise
+Dim i_ticker As String
+Dim d_ticker As String
+Dim v_ticker As String
+Dim great_increase As Double
+Dim great_decrease As Double
+Dim great_volume As Double
+Dim i As Long
+Dim lastrow2 As Long
+
+lastrow2 = ws.Cells(Rows.Count, 10).End(xlUp).Row
+
+For i = 2 To lastrow2
+
+    ' Greatest Percent Increase
+    great_increase = Application.WorksheetFunction.Max(ws.Range("K2:K" & lastrow2))
+    ws.Range("P2").Value = great_increase
+    ws.Range("O2").Value = i_ticker
+    
+    ' Greatest % Decrease
+    great_decrease = Application.WorksheetFunction.Min(ws.Range("K2:K" & lastrow2))
+    ws.Range("P3").Value = great_decrease
+    ws.Range("O3").Value = d_ticker
+    
+    ' Greatest Total Volume
+    great_volume = Application.WorksheetFunction.Max(ws.Range("L2:L" & lastrow2))
+    ws.Range("P4").Value = great_volume
+    ws.Range("O4").Value = v_ticker
+    
+    '  -- Bonus --To identify Ticker Symbol with Value
+    If ws.Range("P2").Value = ws.Range("K" & i).Value Then
+        i_ticker = ws.Range("I" & i).Value
+    ElseIf ws.Range("P3").Value = ws.Range("K" & i).Value Then
+        d_ticker = ws.Range("I" & i).Value
+    ElseIf ws.Range("P4").Value = ws.Range("L" & i).Value Then
+        v_ticker = ws.Range("I" & i).Value
+    End If
+
+Next i
+
+Next ws
+
+End Sub

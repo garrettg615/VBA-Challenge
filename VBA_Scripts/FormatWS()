@@ -1,0 +1,67 @@
+Sub FormatWS()
+
+' This subroutine will Format all worksheets after data has been processed
+' Loop through worksheets
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+' Define variables for For Loop
+Dim i As Long
+Dim lastrow As Long
+Dim lastrow2 As Long
+
+lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+lastrow2 = ws.Cells(Rows.Count, 10).End(xlUp).Row
+
+' Create Summary Table Headers
+
+ws.Range("I1").Value = "Ticker"
+ws.Range("J1").Value = "Yearly Change"
+ws.Range("K1").Value = "Percent Change"
+ws.Range("L1").Value = "Total Volume"
+
+' Format Summary Table Headers
+
+ws.Range("I1:P1").Font.FontStyle = "Bold"
+ws.Range("I1:P1").Font.Size = 16
+ws.Columns("I:L").EntireColumn.AutoFit
+
+' Format Tables
+
+ws.Range("K2:K" & lastrow).NumberFormat = "0.00%"
+ws.Range("J2:J" & lastrow).NumberFormat = "$0.00"
+
+
+
+For i = 2 To lastrow2
+    If ws.Cells(i, 10).Value > 0 Then
+        ws.Range("J" & i).Interior.Color = vbGreen
+        ws.Range("K" & i).Interior.Color = vbGreen
+    ElseIf ws.Cells(i, 10).Value < 0 Then
+        ws.Range("J" & i).Interior.Color = vbRed
+        ws.Range("K" & i).Interior.Color = vbRed
+    End If
+Next i
+
+' Table Labels
+' -- Rows --
+ws.Range("N2").Value = "Greatest % Increase"
+ws.Range("N3").Value = "Greatest % Decrease"
+ws.Range("N4").Value = "Greatest Total Volume"
+' -- Columns --
+ws.Range("O1").Value = "Ticker"
+ws.Range("P1").Value = "Value"
+
+' Format Table Header - Rows
+ws.Range("N2:N4").Font.FontStyle = "Bold"
+ws.Range("N2:N4").Font.Size = 12
+ws.Columns("N").EntireColumn.AutoFit
+ws.Columns("P").EntireColumn.AutoFit
+
+' Format Table Data
+ws.Range("P2:P3").NumberFormat = "0.00%"
+ws.Range("P4").NumberFormat = "General"
+
+Next ws
+
+End Sub

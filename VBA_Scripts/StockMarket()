@@ -1,0 +1,101 @@
+Option Explicit
+
+Sub StockMarket()
+
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+' define variables
+
+Dim ticker As String
+Dim open_price As Double
+Dim close_price As Double
+Dim yr_change As Double
+Dim per_change As Double
+Dim total_volume As Double
+Dim TableRow As Long
+Dim open_date As Long
+
+per_change = 0
+total_volume = 0
+TableRow = 2
+
+' Define variables for For Loop
+
+Dim i As Long
+Dim lastrow As Long
+Dim lastrow2 As Long
+
+lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+lastrow2 = ws.Cells(Rows.Count, 10).End(xlUp).Row
+
+' Loop through Data
+For i = 2 To lastrow
+    If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+       ' Ticker Symbol
+        ticker = ws.Cells(i, 1).Value
+        ws.Range("I" & TableRow).Value = ticker
+        
+        ' Yearly Price Change
+        yr_change = close_price - open_price
+        ws.Range("J" & TableRow).Value = yr_change
+                
+        ' Percentage Change
+        If open_price = 0 Then
+            per_change = 0
+        Else
+            per_change = yr_change / open_price
+        End If
+        
+        ws.Range("K" & TableRow).Value = per_change
+        
+        ' Total Volume
+        total_volume = total_volume + ws.Cells(i, 7).Value
+        ws.Range("L" & TableRow).Value = total_volume
+                
+        ' Reset the variables for next stock symbol
+        TableRow = TableRow + 1
+        yr_change = 0
+        per_change = 0
+        total_volume = 0
+        open_price = 0
+        close_price = 0
+        open_date = 20140101
+        
+    ' If the symbol is the same
+    Else
+        If ws.Range("B" & i).Value = 20140101 Or ws.Range("B" & i).Value = 20150101 Or ws.Range("B" & i).Value = 20160101 Then
+            open_date = ws.Range("B" & i).Value
+            open_price = ws.Range("C" & i).Value
+        
+        ElseIf open_date = 20140101 And open_price = 0 Then
+            open_price = ws.Range("C" & i).Value
+            open_date = ws.Range("B" & i).Value
+            
+        ElseIf open_date = 20150101 And open_price = 0 Then
+            open_price = ws.Range("C" & i).Value
+            open_date = ws.Range("B" & i).Value
+            
+        ElseIf open_date = 20160101 And open_price = 0 Then
+            open_price = ws.Range("C" & i).Value
+            open_date = ws.Range("B" & i).Value
+        
+        End If
+        
+        close_price = ws.Range("F" & i + 1).Value
+                
+        total_volume = total_volume + ws.Cells(i, 7).Value
+        
+        
+    End If
+    
+
+    
+Next i
+
+    Bonus
+    FormatWS
+
+Next ws
+
+End Sub
